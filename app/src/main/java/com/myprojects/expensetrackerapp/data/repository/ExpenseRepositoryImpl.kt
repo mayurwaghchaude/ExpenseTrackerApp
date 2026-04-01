@@ -6,7 +6,7 @@ import com.myprojects.expensetrackerapp.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class ExpenseRepositoryImpl @Inject constructor(
+class ExpenseRepositoryImpl constructor(
     private val dao: ExpenseDao
 ) : ExpenseRepository {
     override fun getAllExpenses() = dao.getAllExpenses().map { list -> list.map { it.toDomain() } }
