@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.myprojects.expensetrackerapp.presentation.screens.addExpense.AddExpenseScreen
+import com.myprojects.expensetrackerapp.presentation.screens.analytics.AnalyticsScreen
 import com.myprojects.expensetrackerapp.presentation.screens.home.HomeScreen
 
 sealed class Screen(val route: String) {
@@ -27,7 +29,7 @@ fun AppNavGraph(
             HomeScreen(navController)
         }
 
-        /*composable(Screen.AddExpense.route){
+        composable(Screen.AddExpense.route){
             AddExpenseScreen(navController)
         }
 
@@ -35,7 +37,7 @@ fun AppNavGraph(
             AnalyticsScreen(navController)
         }
 
-        composable(Screen.Settings.route){
+        /*composable(Screen.Settings.route){
             SettingsScreen(navController)
         }
         composable(Screen.EditExpense.route){backStackEntry ->

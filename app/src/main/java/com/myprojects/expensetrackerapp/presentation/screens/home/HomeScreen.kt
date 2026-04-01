@@ -99,14 +99,14 @@ fun HomeScreen(
             } else {
                 items(
                     items = uiState.expenses.take(10),
-                    key = { it.id }
+                    key = { it.id ?: "" }
                 ) { expense ->
                     ExpenseCard(
                         expense = expense,
                         onDelete = { viewModel.deleteExpense(expense) },
                         onClick = {
                             navController.navigate(
-                                Screen.EditExpense.createRoute(expense.id)
+                                Screen.EditExpense.createRoute(expense.id ?: "")
                             )
                         }
                     )

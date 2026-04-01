@@ -29,6 +29,11 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUIState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        observeExpenses()
+        observeSummary()
+    }
+
     private fun observeExpenses() {
         viewModelScope.launch {
             expenseUseCases.getExpenses().collect { expenses ->
