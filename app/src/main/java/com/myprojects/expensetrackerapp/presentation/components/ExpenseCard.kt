@@ -13,12 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.myprojects.expensetrackerapp.R
 import com.myprojects.expensetrackerapp.domain.enums.ExpenseCategory
 import com.myprojects.expensetrackerapp.domain.enums.ExpenseType
 import com.myprojects.expensetrackerapp.domain.model.Expense
+import com.myprojects.expensetrackerapp.ui.theme.ExpenseRed
+import com.myprojects.expensetrackerapp.ui.theme.IncomeGreen
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,19 +43,19 @@ fun ExpenseCard(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete expense") },
-            text = { Text("Are you sure you want to delete \"${expense.title}\"?") },
+            title = { Text(stringResource(R.string.delete_expense_title)) },
+            text = { Text(stringResource(R.string.delete_expense_confirmation, expense.title)) },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()
                     showDeleteDialog = false
                 }) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -76,8 +80,8 @@ fun ExpenseCard(
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = category.icon,
-                    contentDescription = category.name,
-                    tint = Color(0xFF1D9E75),
+                    contentDescription = stringResource(category.labelRes),
+                    tint = category.iconTint,
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -107,7 +111,7 @@ fun ExpenseCard(
             }",
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (expense.type == ExpenseType.EXPENSE) Color(0xFFE24B4A) else Color(0xFF1D9E75)
+            color = if (expense.type == ExpenseType.EXPENSE) ExpenseRed else IncomeGreen
         )
 
         // Delete button
@@ -117,7 +121,7 @@ fun ExpenseCard(
         ) {
             Icon(
                 imageVector = Icons.Rounded.Delete,
-                contentDescription = "Delete",
+                contentDescription = stringResource(R.string.delete),
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                 modifier = Modifier.size(18.dp)
             )

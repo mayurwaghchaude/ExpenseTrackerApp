@@ -1,5 +1,6 @@
 package com.myprojects.expensetrackerapp.presentation.screens.addExpense
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.myprojects.expensetrackerapp.R
 import com.myprojects.expensetrackerapp.domain.enums.ExpenseCategory
 import com.myprojects.expensetrackerapp.domain.enums.ExpenseType
 import java.text.SimpleDateFormat
@@ -34,6 +36,7 @@ fun AddExpenseScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    var showDatePicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(expenseId) {
         expenseId?.let { viewModel.loadExpense(it) }
@@ -49,12 +52,44 @@ fun AddExpenseScreen(
         }
     }
 
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = uiState.date
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let {
+                            viewModel.onDateChange(it)
+                        }
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = if (expenseId == null) "Add Income/Expense" else "Edit Expense",
+                        text = if (expenseId == null) {
+                            stringResource(R.string.add_transaction)
+                        } else {
+                            stringResource(R.string.update_transaction)
+                        },
                         fontWeight = FontWeight.SemiBold
                     )
                 },
@@ -62,7 +97,7 @@ fun AddExpenseScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
@@ -88,7 +123,7 @@ fun AddExpenseScreen(
                         onClick = { viewModel.onTypeChange(type) },
                         label = { Text(type.name.lowercase().replaceFirstChar { it.uppercase() }) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFF1D9E75),
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = Color.White
                         )
                     )
@@ -99,7 +134,7 @@ fun AddExpenseScreen(
             OutlinedTextField(
                 value = uiState.amount,
                 onValueChange = viewModel::onAmountChange,
-                label = { Text("Amount (₹)") },
+                label = { Text(stringResource(R.string.amount_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -110,14 +145,18 @@ fun AddExpenseScreen(
             OutlinedTextField(
                 value = uiState.title,
                 onValueChange = viewModel::onDescriptionChange,
-                label = { Text("Description") },
+                label = { Text(stringResource(R.string.description_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = uiState.error?.contains("description", ignoreCase = true) == true
             )
 
             // Category
-            Text(text = "Category", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = stringResource(R.string.category_label),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(ExpenseCategory.entries) { category ->
                     FilterChip(
@@ -128,11 +167,12 @@ fun AddExpenseScreen(
                             Icon(
                                 imageVector = category.icon,
                                 contentDescription = null,
+                                tint = category.iconTint,
                                 modifier = Modifier.size(16.dp)
                             )
                         },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFF1D9E75),
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = Color.White,
                             selectedLeadingIconColor = Color.White
                         )
@@ -141,25 +181,38 @@ fun AddExpenseScreen(
             }
 
             // Date
-            OutlinedTextField(
-                value = dateFormatter.format(Date(uiState.date)),
-                onValueChange = {},
-                label = { Text("Date") },
-                readOnly = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Rounded.CalendarMonth,
-                        contentDescription = "Pick date"
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePicker = true }
+            ) {
+                OutlinedTextField(
+                    value = dateFormatter.format(Date(uiState.date)),
+                    onValueChange = {},
+                    label = { Text(stringResource(R.string.date_label)) },
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Rounded.CalendarMonth,
+                            contentDescription = stringResource(R.string.pick_date)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = false,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledBorderColor = MaterialTheme.colorScheme.outline,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                )
+            }
 
             // Note
             OutlinedTextField(
                 value = uiState.note,
                 onValueChange = viewModel::onNoteChange,
-                label = { Text("Note (optional)") },
+                label = { Text(stringResource(R.string.note_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2
             )
@@ -177,7 +230,7 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1D9E75)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 enabled = !uiState.isLoading
             ) {
                 if (uiState.isLoading) {
@@ -188,8 +241,13 @@ fun AddExpenseScreen(
                     )
                 } else {
                     Text(
-                        text = if (expenseId == null) "Save expense" else "Update expense",
+                        text = if (expenseId == null) {
+                            stringResource(R.string.save_transaction)
+                        } else {
+                            stringResource(R.string.update_transaction)
+                        },
                         fontSize = 16.sp,
+                        color = Color.White,
                         fontWeight = FontWeight.SemiBold
                     )
                 }

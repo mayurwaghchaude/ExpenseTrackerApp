@@ -8,4 +8,75 @@
     <string name="category_shopping">Shopping</string>
     <string name="category_salary">Salary</string>
     <string name="category_other">Other</string>
+
+    <!-- General -->
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="total">Total</string>
+    <string name="delete">Delete</string>
+    <string name="see_all">See All</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+
+    <!-- Home Screen -->
+    <string name="total_balance">Total Balance</string>
+    <string name="income">Income</string>
+    <string name="expenses">Expenses</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="no_transactions_yet">No transactions yet</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_analytics">Analytics</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Add Transaction -->
+    <string name="add_transaction">Add Transaction</string>
+    <string name="update_transaction">Update Transaction</string>
+    <string name="save_transaction">Save Transaction</string>
+    <string name="amount_label">Amount (₹)</string>
+    <string name="description_label">Description</string>
+    <string name="category_label">Category</string>
+    <string name="date_label">Date</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="note_label">Note (optional)</string>
+    <string name="error_empty_description">Description cannot be empty</string>
+    <string name="error_invalid_amount">Enter a valid amount</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Analytics</string>
+    <string name="total_spent_label">Total Spent</string>
+    <string name="total_income_label">Total Income</string>
+    <string name="spending_distribution">Spending Distribution</string>
+    <string name="by_category">By Category</string>
+    <string name="no_data_yet">No expense data yet</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">Transactions</string>
+    <string name="search_hint">Search transactions...</string>
+    <string name="no_results">No results for \"%1$s\"</string>
+    <string name="filter_all">All</string>
+    <string name="filter_income">Income</string>
+    <string name="filter_expense">Expense</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="preferences_section">Preferences</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="currency">Currency</string>
+    <string name="start_of_month">Start of Month</string>
+    <string name="budget_section">Budget</string>
+    <string name="monthly_budget">Monthly Budget</string>
+    <string name="budget_alerts">Budget Alerts</string>
+    <string name="data_section">Data</string>
+    <string name="export_data">Export Data</string>
+    <string name="clear_all_data">Clear All Data</string>
+    <string name="clear_data_title">Clear all data</string>
+    <string name="clear_data_confirmation">This will permanently delete all your transactions. This action cannot be undone.</string>
+
+    <!-- Expense Card -->
+    <string name="delete_expense_title">Delete Expense</string>
+    <string name="delete_expense_confirmation">Are you sure you want to delete \"%1$s\"?</string>
 </resources>

@@ -3,16 +3,23 @@ package com.myprojects.expensetrackerapp.di
 import android.app.Application
 import androidx.room.Room
 import com.myprojects.expensetrackerapp.data.dao.ExpenseDao
+import com.myprojects.expensetrackerapp.data.dao.SettingsDao
 import com.myprojects.expensetrackerapp.data.datasource.AppDatabase
 import com.myprojects.expensetrackerapp.data.repository.ExpenseRepositoryImpl
+import com.myprojects.expensetrackerapp.data.repository.SettingsRepositoryImpl
 import com.myprojects.expensetrackerapp.domain.repository.ExpenseRepository
+import com.myprojects.expensetrackerapp.domain.repository.SettingsRepository
 import com.myprojects.expensetrackerapp.domain.usecases.AddExpenseUseCase
 import com.myprojects.expensetrackerapp.domain.usecases.DeleteExpenseUseCase
 import com.myprojects.expensetrackerapp.domain.usecases.ExpenseUseCases
 import com.myprojects.expensetrackerapp.domain.usecases.GetCategoryTotalsUseCase
 import com.myprojects.expensetrackerapp.domain.usecases.GetExpensesByDateRangeUseCase
 import com.myprojects.expensetrackerapp.domain.usecases.GetExpensesUseCase
+import com.myprojects.expensetrackerapp.domain.usecases.GetSettingsUseCase
 import com.myprojects.expensetrackerapp.domain.usecases.GetSummaryUseCase
+import com.myprojects.expensetrackerapp.domain.usecases.GetThemeUseCase
+import com.myprojects.expensetrackerapp.domain.usecases.SaveSettingsUseCase
+import com.myprojects.expensetrackerapp.domain.usecases.SettingsUseCases
 import com.myprojects.expensetrackerapp.domain.usecases.UpdateExpenseUseCase
 import dagger.Module
 import dagger.Provides
@@ -40,9 +47,18 @@ object AppModule {
     }
 
     @Provides
+    fun provideSettingsDao(db: AppDatabase): SettingsDao = db.settingsDao()
+
+    @Provides
     @Singleton
     fun provideExpenseRepository(db: AppDatabase): ExpenseRepository {
         return ExpenseRepositoryImpl(db.expenseDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(db: AppDatabase): SettingsRepository {
+        return SettingsRepositoryImpl(db.settingsDao())
     }
 
     @Provides
@@ -58,4 +74,13 @@ object AppModule {
         getSummary = GetSummaryUseCase(repository),
         getExpensesByDateRange = GetExpensesByDateRangeUseCase(repository)
     )
+
+    @Provides
+    @Singleton
+    fun provideSettingsUseCases(repository: SettingsRepository): SettingsUseCases =
+        SettingsUseCases(
+            getSettings = GetSettingsUseCase(repository),
+            saveSettings = SaveSettingsUseCase(repository),
+            getTheme = GetThemeUseCase(repository)
+        )
 }

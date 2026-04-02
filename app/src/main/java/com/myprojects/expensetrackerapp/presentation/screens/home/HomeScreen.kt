@@ -15,14 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.myprojects.expensetrackerapp.R
 import com.myprojects.expensetrackerapp.core.navigation.Screen
 import com.myprojects.expensetrackerapp.presentation.components.BottomNavBar
 import com.myprojects.expensetrackerapp.presentation.components.ExpenseCard
+import com.myprojects.expensetrackerapp.ui.theme.NavyPrimary
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -61,12 +64,15 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Recent transactions",
+                        text = stringResource(R.string.recent_transactions),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    TextButton(onClick = { /* navigate to all expenses */ }) {
-                        Text(text = "See all", color = Color(0xFF1D9E75))
+                    TextButton(onClick = { navController.navigate(Screen.Transactions.route) }) {
+                        Text(
+                            text = stringResource(R.string.see_all),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                 }
             }
@@ -79,7 +85,7 @@ fun HomeScreen(
                             .padding(32.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color(0xFF1D9E75))
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     }
                 }
             } else if (uiState.expenses.isEmpty()) {
@@ -91,7 +97,7 @@ fun HomeScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No transactions yet",
+                            text = stringResource(R.string.no_transactions_yet),
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                         )
                     }
@@ -129,12 +135,12 @@ fun BalanceCard(
             .fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFF1D9E75))
+            .background(MaterialTheme.colorScheme.primary)
             .padding(24.dp)
     ) {
         Column {
             Text(
-                text = "Total Balance",
+                text = stringResource(R.string.total_balance),
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 14.sp
             )
@@ -151,12 +157,12 @@ fun BalanceCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SummaryChip(
-                    label = "Income",
+                    label = stringResource(R.string.income),
                     amount = formatter.format(totalIncome),
                     modifier = Modifier.weight(1f)
                 )
                 SummaryChip(
-                    label = "Expenses",
+                    label = stringResource(R.string.expenses),
                     amount = formatter.format(totalExpense),
                     modifier = Modifier.weight(1f)
                 )

@@ -9,9 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.myprojects.expensetrackerapp.presentation.screens.addExpense.AddExpenseScreen
 import com.myprojects.expensetrackerapp.presentation.screens.analytics.AnalyticsScreen
 import com.myprojects.expensetrackerapp.presentation.screens.home.HomeScreen
+import com.myprojects.expensetrackerapp.presentation.screens.settings.SettingsScreen
+import com.myprojects.expensetrackerapp.presentation.screens.transactions.TransactionScreen
 
 sealed class Screen(val route: String) {
     object Home: Screen("home")
+    object Transactions: Screen("transactions")
     object AddExpense: Screen("add_expense")
     object EditExpense: Screen("edit_expense/{expenseId}"){
         fun createRoute(expenseId: String) = "edit_expense/$expenseId"
@@ -29,6 +32,10 @@ fun AppNavGraph(
             HomeScreen(navController)
         }
 
+        composable(Screen.Transactions.route){
+            TransactionScreen(navController)
+        }
+
         composable(Screen.AddExpense.route){
             AddExpenseScreen(navController)
         }
@@ -37,12 +44,12 @@ fun AppNavGraph(
             AnalyticsScreen(navController)
         }
 
-        /*composable(Screen.Settings.route){
+        composable(Screen.Settings.route){
             SettingsScreen(navController)
         }
         composable(Screen.EditExpense.route){backStackEntry ->
-            val expenseId = backStackEntry.arguments?.getString("expenseId")?.toIntOrNull()
+            val expenseId = backStackEntry.arguments?.getString("expenseId")
             AddExpenseScreen(navController = navController, expenseId = expenseId)
-        }*/
+        }
     }
 }
