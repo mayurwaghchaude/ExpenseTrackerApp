@@ -72,7 +72,7 @@ class AddExpenseViewModel @Inject constructor(
     fun onNoteChange(value: String) =
         _uiState.update { it.copy(note = value) }
 
-    fun saveExpense() {
+    fun saveExpense(expenseId: String? = null) {
         val state = _uiState.value
         val amount = state.amount.toDoubleOrNull()
 
@@ -88,16 +88,30 @@ class AddExpenseViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                expenseUseCases.addExpense(
-                    Expense(
-                        title = state.title,
-                        amount = amount,
-                        category = state.selectedCategory.name,
-                        type = state.selectedType,
-                        date = state.date,
-                        note = state.note
+                if (expenseId == null) {
+                    expenseUseCases.addExpense(
+                        Expense(
+                            title = state.title,
+                            amount = amount,
+                            category = state.selectedCategory.name,
+                            type = state.selectedType,
+                            date = state.date,
+                            note = state.note
+                        )
                     )
-                )
+                } else {
+                    expenseUseCases.updateExpense(
+                        Expense(
+                            id = expenseId,
+                            title = state.title,
+                            amount = amount,
+                            category = state.selectedCategory.name,
+                            type = state.selectedType,
+                            date = state.date,
+                            note = state.note
+                        )
+                    )
+                }
                 _uiState.update { it.copy(isSaved = true, isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message, isLoading = false) }

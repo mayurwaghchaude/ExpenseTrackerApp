@@ -226,7 +226,7 @@ fun AddExpenseScreen(
 
             // Save button
             Button(
-                onClick = viewModel::saveExpense,
+                onClick = { viewModel.saveExpense(expenseId) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
